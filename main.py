@@ -6,6 +6,15 @@ import os
 import json
 import time
 
+# Update These Data
+folder_to_track = "/Users/coachrye/Desktop/TrackMe"
+folder_destination = "/Users/coachrye/Desktop/SendMe"
+# "/Users/coachrye/Documents/_Desktop Cleanup"
+sub_images = "/Images"
+sub_others = "/Others"
+sub_pdfles = "/PDFs"
+sub_videos = "/Videos"
+
 class MyHandler(FileSystemEventHandler):
 
     # def on_created(self, event):
@@ -24,6 +33,7 @@ class MyHandler(FileSystemEventHandler):
         for filename in os.listdir(folder_to_track):
             i = 1
             new_name = filename
+            # TODO: Check filetype and update folder_destination
             file_exists = os.path.isfile(folder_destination + "/" + new_name)
             while file_exists:
                 # new_name = name-only + newname + extension-only
@@ -35,9 +45,6 @@ class MyHandler(FileSystemEventHandler):
             new_destination = folder_destination + "/" + new_name
             os.rename(src, new_destination)
 
-folder_to_track = "/Users/coachrye/Desktop/TrackMe"
-folder_destination = "/Users/coachrye/Desktop/SendMe"
-# "/Users/coachrye/Documents/_Desktop Cleanup"
 event_handler = MyHandler()
 observer = Observer()
 observer.schedule(event_handler, folder_to_track, recursive=True)
