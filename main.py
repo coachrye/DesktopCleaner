@@ -7,7 +7,7 @@ import json
 import time
 
 class MyHandler(FileSystemEventHandler):
-    i = 1
+
     # def on_created(self, event):
     #     print(f"hey, {event.src_path} has been created!")
 
@@ -21,13 +21,15 @@ class MyHandler(FileSystemEventHandler):
     #     print(f"ok ok ok, someone moved {event.src_path} to {event.dest_path}")
     
     def on_modified(self, event):
-        new_name = "new_file_" + str(self.i) + ".txt"
         for filename in os.listdir(folder_to_track):
+            i = 1
+            new_name = filename
             file_exists = os.path.isfile(folder_destination + "/" + new_name)
             while file_exists:
-                self.i += 1
-                new_name = "new_file_" + str(self.i) + ".txt"
+                # new_name = name-only + newname + extension-only
+                new_name = os.path.splitext(filename)[0] + "-" + str(i) + os.path.splitext(filename)[1]
                 file_exists = os.path.isfile(folder_destination + "/" + new_name)
+                i += 1
             
             src = folder_to_track + "/" + filename
             new_destination = folder_destination + "/" + new_name
