@@ -26,22 +26,7 @@ class MyHandler(FileSystemEventHandler):
         for filename in os.listdir(folder_to_track):
             i = 1
             new_name = filename
-
-            ########## ! ########## ! ########## ! ########## ! ##########
-            # Decided to allow transfer of directory / folder
-            ########## ! ########## ! ########## ! ########## ! ##########
-            # Check and process differently if it's a directory / folder. 
-            # Check https://stackoverflow.com/questions/22207936/how-to-find-files-and-skip-directories-in-os-listdir            
-            ########## ! ########## ! ########## ! ########## ! ##########
-            # TODO: If directory, check if duplicate name and avoid error: 
-            #       File "/Users/coachrye/Documents/TheHub/coachrye/DesktopCleaner/main.py", line 61, in on_modified
-            #           os.rename(src, new_destination)
-            #           OSError: [Errno 66] Directory not empty:
-            ########## ! ########## ! ########## ! ########## ! ##########
-            # path = os.path.join(folder_to_track, filename)
-            # if os.path.isdir(path):
-            #     # skip directories
-            #     continue
+            is_directory = False
             
             # Check filetype and update folder_destination
             global folder_destination
@@ -57,13 +42,26 @@ class MyHandler(FileSystemEventHandler):
                 folder_destination = folder_destination + sub_audios
             else:
                 folder_destination = folder_destination + sub_others
+                path = os.path.join(folder_to_track, filename)
+                if os.path.isdir(path):
+                    is_directory = True
 
-            file_exists = os.path.isfile(folder_destination + "/" + new_name)
-            while file_exists:
-                # new_name = name-only + newname + extension-only
-                new_name = os.path.splitext(filename)[0] + "-" + str(i) + file_extension
+            # TODO: Optimize code for checking directory vs file
+            # If directory, check if duplicate name and avoid error: 
+            if is_directory:
+                new_path = os.path.join(folder_destination, filename)
+                while os.path.isdir(new_path):
+                     # new_name = name-only + newname + extension-only
+                    new_name = filename + "-" + str(i)
+                    new_path = os.path.join(folder_destination, new_name)
+                    i += 1
+            else:
                 file_exists = os.path.isfile(folder_destination + "/" + new_name)
-                i += 1
+                while file_exists:
+                    # new_name = name-only + newname + extension-only
+                    new_name = os.path.splitext(filename)[0] + "-" + str(i) + file_extension
+                    file_exists = os.path.isfile(folder_destination + "/" + new_name)
+                    i += 1
             
             src = folder_to_track + "/" + filename
             new_destination = folder_destination + "/" + new_name
