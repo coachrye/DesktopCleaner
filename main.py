@@ -26,8 +26,22 @@ class MyHandler(FileSystemEventHandler):
         for filename in os.listdir(folder_to_track):
             i = 1
             new_name = filename
-            # TODO: Check and process differently if it's a directory / folder. 
-            # Check https://stackoverflow.com/questions/22207936/how-to-find-files-and-skip-directories-in-os-listdir
+
+            ########## ! ########## ! ########## ! ########## ! ##########
+            # Decided to allow transfer of directory / folder
+            ########## ! ########## ! ########## ! ########## ! ##########
+            # Check and process differently if it's a directory / folder. 
+            # Check https://stackoverflow.com/questions/22207936/how-to-find-files-and-skip-directories-in-os-listdir            
+            ########## ! ########## ! ########## ! ########## ! ##########
+            # TODO: If directory, check if duplicate name and avoid error: 
+            #       File "/Users/coachrye/Documents/TheHub/coachrye/DesktopCleaner/main.py", line 61, in on_modified
+            #           os.rename(src, new_destination)
+            #           OSError: [Errno 66] Directory not empty:
+            ########## ! ########## ! ########## ! ########## ! ##########
+            # path = os.path.join(folder_to_track, filename)
+            # if os.path.isdir(path):
+            #     # skip directories
+            #     continue
             
             # Check filetype and update folder_destination
             global folder_destination
